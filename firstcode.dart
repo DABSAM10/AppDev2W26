@@ -59,4 +59,6 @@ void main(){
 
   var newvar = null;
   print(newvar);
+
+  int? newVar = null;
 }
