@@ -163,11 +163,24 @@ class _DogOwnerScreenState extends State<DogOwnerScreen> {
   }
 
   Future<void> filterByAge() async {
-    final result = await database.query(
-      'dogs',
-      where: 'age > ?',
-      whereArgs: [int.parse(dogAgeController.text)],
-    );
+    // final result = await database.query(
+    //   'dogs',
+    //   where: 'age > ?',
+    //   whereArgs: [int.parse(dogAgeController.text)],
+    // );
+
+    final result = await database.rawQuery('''
+     SELECT 
+      dogs.id AS dogId,
+      dogs.name,
+      dogs.age,
+      owners.id AS ownerId,
+      owners.name AS ownerName 
+     FROM dogs
+     LEFT JOIN owners
+     ON dogs.ownerId = owners.id
+     WHERE dogs.age > ?
+    ''', [int.parse(dogAgeController.text)]);
 
     setState(() {
       dogList = result;
@@ -180,9 +193,17 @@ class _DogOwnerScreenState extends State<DogOwnerScreen> {
       dogs.id AS dogId,
       dogs.name,
       dogs.age,
-      owners.id AS ownerId
-      owners.name
-    ''');
+      owners.id AS ownerId,
+      owners.name AS ownerName 
+     FROM dogs
+     LEFT JOIN owners
+     ON dogs.ownerId = owners.id
+     WHERE dogs.name LIKE ?
+    ''', ['%${dogNameController.text}%']);
+
+    setState(() {
+      dogList = result;
+    });
   }
 
   void clearDogFields() {
@@ -190,6 +211,12 @@ class _DogOwnerScreenState extends State<DogOwnerScreen> {
     dogNameController.clear();
     dogAgeController.clear();
     dogOwnerIdController.clear();
+  }
+
+  void clearFields() {
+    ownerIdController.clear();
+    ownerNameController.clear();
+    clearDogFields();
   }
 
   // ---------------- UI ----------------
@@ -237,6 +264,8 @@ class _DogOwnerScreenState extends State<DogOwnerScreen> {
                 ElevatedButton(onPressed: deleteDog, child: Text("Delete")),
                 ElevatedButton(onPressed: filterByOwner, child: Text("Filter Owner")),
                 ElevatedButton(onPressed: filterByAge, child: Text("Age >")),
+                ElevatedButton(onPressed: filterByDogName, child: Text("Filter Dog")),
+                ElevatedButton(onPressed: clearFields, child: Text("Clear"))
               ],
             ),
 
