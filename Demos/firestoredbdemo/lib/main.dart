@@ -46,6 +46,7 @@ class _FSDemoSampleState extends State<FSDemoSample> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  
   // Add the data to the cloud
   Future<void> addUser() async {
     String username = usernameController.text;
@@ -64,7 +65,16 @@ class _FSDemoSampleState extends State<FSDemoSample> {
 
   // Update an entity(doc)
   Future<void> updateUser(String id) async {
-    await users.doc(id).update({'username': 'new name', 'password': 'vanier'});
+    // await users.doc(id).update({'username': 'new name', 'password': 'vanier'});
+
+    String username = usernameController.text;
+    String password = passwordController.text;
+
+    await users.doc(id).update({
+      'username': username,
+      'password': password
+    });
+
     clearFields();
   }
 
@@ -126,11 +136,76 @@ class _FSDemoSampleState extends State<FSDemoSample> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                  onPressed: () => updateUser(doc.id),
+                                  // onPressed() => updateUser(doc.id),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text('Update Database'),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              TextField(
+                                                controller: usernameController,
+                                                decoration: InputDecoration(
+                                                  hintText: "Enter new username",
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                              TextField(
+                                                controller: passwordController,
+                                                decoration: InputDecoration(
+                                                  hintText: "Enter new password",
+                                                ),
+                                                // obscureText: true,
+                                              ),
+                                            ],
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context),
+                                              child: Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              child: Text('OK'),
+                                              onPressed: () {
+                                                updateUser(doc.id);
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
                                   icon: Icon(Icons.edit)
                               ),
                               IconButton(
-                                  onPressed: () => deleteUser(doc.id),
+                                  // onPressed: () => deleteUser(doc.id),
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text('Confirm Delete'),
+                                            content: Text('Are you sure you want to delete this credential from the database?'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                  onPressed: () => Navigator.pop(context),
+                                                  child: Text('Cancel')
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    deleteUser(doc.id);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('OK'))
+                                            ],
+                                          );
+                                        }
+                                    );
+                                  },
                                   icon: Icon(Icons.delete)
                               ),
                             ],
