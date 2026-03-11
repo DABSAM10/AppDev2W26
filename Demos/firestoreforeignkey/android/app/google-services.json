@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "317176859197",
+    "project_id": "firestoreforeignkey",
+    "storage_bucket": "firestoreforeignkey.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317176859197:android:022fea66f88b269e447854",
+        "android_client_info": {
+          "package_name": "com.example.firestoreforeignkey"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB86t2t3Jo9UiI6Q3uJMQVIUNg6WT_1xrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
